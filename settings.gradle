@@ -1,0 +1,30 @@
+plugins {
+    id('com.gradle.enterprise') version '3.8.1'
+    id('com.gradle.enterprise.test-distribution') version '2.2.3'
+}
+
+rootProject.name = 'sample-multi-module'
+
+include 'sample-java'
+include 'sample-kotlin'
+
+gradleEnterprise {
+    server = 'https://ge-td-dogfooding.grdev.net/'
+
+    buildScan {
+        publishAlways()
+
+        capture {
+            taskInputFiles = true
+        }
+
+        buildCache {
+            local { enabled = true }
+            remote(HttpBuildCache) {
+                enabled = false
+                url = "https://ge-td-dogfooding.grdev.net/cache/"
+                push = true
+            }
+        }
+    }
+}
